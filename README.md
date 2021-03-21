@@ -1,15 +1,48 @@
-# Tensorflow - Recurrent Independent Mechanisms
+This repo builds off https://github.com/fuyuan-li/tensorflow-RIMs by fuyuan-li
 
-This is a tensorflow implementation of [Recurrent Independent Mechanisms](https://arxiv.org/abs/1909.10893) (Goyal et al. 2019)
-by Fuyuan Li, original authorship of the paper is
+## Install TF-AGENTS
 
-[Anirudh Goyal](https://anirudh9119.github.io/), [Alex Lamb](https://alexlamb62.github.io/), [Jordan Hoffmann](https://jhoffmann.org/), [Shagun Sodhani](https://mila.quebec/en/person/shagun-sodhani/), [Sergey Levine](https://people.eecs.berkeley.edu/~svlevine/), [Yoshua Bengio](https://mila.quebec/en/yoshua-bengio/), [Bernhard Sch{\"o}lkopf](https://www.is.mpg.de/~bs)
+Install https://github.com/tensorflow/agents/ version r0.7.1 under a virtual enviorment with package versions:
 
-    @article{goyal2019recurrent,
-        title={Recurrent independent mechanisms},
-        author={Goyal, Anirudh and Lamb, Alex and Hoffmann, Jordan and Sodhani, Shagun and Levine, Sergey and Bengio, Yoshua and Sch{\"o}lkopf, Bernhard},
-        journal={arXiv preprint arXiv:1909.10893},
-        year={2019}
-    }
+- tensorflow-probability 0.12.1
 
-The pytorch implementation can be found at author's github repo [https://github.com/anirudh9119/RIMs]
+- tensorflow 2.4.0
+
+- dm-env 1.4
+
+- gym 0.18.0
+
+- mujoco_py 2.0.2.13
+
+- tensorflow-estimator 2.4.0  
+
+- dm-tree 0.1.5 
+
+- dm-control 0.0.355168290
+
+
+## Modify TF agents installation with these updated files
+
+AGENTS_PATH refers to your instllation of tf-agents 0.7.1 .
+
+1. Move __init__.py to /AGENTS_PATH/networks
+
+2. Move lstm_encoding_network.py to /AGENTS_PATH/networks
+
+3. Move LSTM_cell_test.py to /AGENTS_PATH/networks
+
+4. Move GroupLinearLayer.py to /AGENTS_PATH/networks
+
+5. Move GroupLSTMCell.py to /AGENTS_PATH/networks
+
+6. Move RIMCell.py to /AGENTS_PATH/networks
+
+7. Move RIMCellPlay.py to /AGENTS_PATH/networks
+
+9. Move actor_rnn_network.py to /AGENTS_PATH/agents/ddpg
+
+## To test
+
+cd /AGENTS_PATH/agents/ddpg/examples/v2
+
+python train_eval_rnn.py --root_dir=/path/to/your/dir
