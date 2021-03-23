@@ -66,15 +66,18 @@ class RIMCellPlay(tf.keras.layers.Layer):
         self.comm_query_size = comm_query_size
         self.comm_keep_prob = comm_keep_prob
 
-        self.activation="RIM"
+        self.activation="hard_sigmoid"
         self.output_size = self.units
+        print("RIMSPEC")
+        print(self.units)
+        print(self.nRIM)
 
         assert input_key_size == input_query_size, 'input_key_size == input_query_size required'
         assert comm_key_size == comm_query_size, 'comm_key_size == comm_query_size required'
 
     @property
     def state_size(self):
-        return (tf.TensorShape([self.nRIM, self.units]), tf.TensorShape([self.nRIM, self.units]))
+        return [tf.TensorShape([self.nRIM, self.units]), tf.TensorShape([self.nRIM, self.units])]
 
     def build(self, input_shape):
         self.key = tf.keras.layers.Dense(units=self.num_input_heads * self.input_key_size, activation=None,
@@ -91,6 +94,10 @@ class RIMCellPlay(tf.keras.layers.Layer):
         self.query_ = GroupLinearLayer.GroupLinearLayer(units=self.num_comm_heads * self.comm_query_size, nRIM=self.nRIM)
         self.comm_attention_dropout = tf.keras.layers.Dropout(rate=1 - self.comm_keep_prob)
         self.comm_attention_output = GroupLinearLayer.GroupLinearLayer(units=self.units, nRIM=self.nRIM)
+
+
+        self.out_lay = tf.keras.layers.Dense(units=40, activation=None,
+                                           use_bias=True)
 
 
         self.built = True
@@ -115,19 +122,24 @@ class RIMCellPlay(tf.keras.layers.Layer):
         h_update = h_comm * mask + h_old * (1 - mask)
         c_update = c_rnnout * mask + c_old * (1 - mask)
 
+        #print(inputs.shape)
+        #print("h_update")
 
-        out_state = tf.reshape(h_update, [tf.shape(inputs)[0], self.units * self.nRIM])
+        #print(h_update.shape)
+        out_state = tf.reshape(h_update, [tf.shape(inputs)[0], self.units*self.nRIM])
 
-        print(out_state)
+        out_state=self.out_lay(out_state)
+
+        #print(out_state)
         #out_h = (h_update, c_update)
 
 
         out_h = [h_update, c_update]
 
-        print(out_state.shape)
+        #print(out_state.shape)
 
-        print(h_update.shape)
-        print(c_update.shape)
+        #print(h_update.shape)
+        #print(c_update.shape)
         #print(out_h.shape)
 
         return out_state, out_h

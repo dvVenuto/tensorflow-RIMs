@@ -23,6 +23,8 @@ Install https://github.com/tensorflow/agents/ version r0.7.1 under a virtual env
 
 ## Modify TF agents installation with these updated files
 
+These steps will run the PPO algorithm.
+
 AGENTS_PATH refers to your instllation of tf-agents 0.7.1 .
 
 1. Move __init__.py to /AGENTS_PATH/networks
@@ -41,8 +43,10 @@ AGENTS_PATH refers to your instllation of tf-agents 0.7.1 .
 
 9. Move actor_rnn_network.py to /AGENTS_PATH/agents/ddpg
 
+10. BSUITE implementation to follow
+
 ## To test
 
-cd /AGENTS_PATH/agents/ddpg/examples/v2
+cd /AGENTS_PATH/agents/ppo/examples/v2
 
-python train_eval_rnn.py --root_dir=/path/to/your/dir
+python train_eval_clip_agent.py --root_dir="."

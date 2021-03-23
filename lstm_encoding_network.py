@@ -30,7 +30,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from tf_agents.networks import  RIMCell
+from tf_agents.networks import  RIMCellPlay
 
 import gin
 import tensorflow as tf  # pylint: disable=g-explicit-tensorflow-version-import
@@ -58,7 +58,7 @@ class LSTMEncodingNetwork(network.Network):
       preprocessing_combiner=None,
       conv_layer_params=None,
       input_fc_layer_params=(75, 40),
-      lstm_size=None,
+      lstm_size=40,
       output_fc_layer_params=(75, 40),
       activation_fn=tf.keras.activations.relu,
       rnn_construction_fn=None,
@@ -142,7 +142,10 @@ class LSTMEncodingNetwork(network.Network):
       ValueError: If neither `lstm_size` nor `rnn_construction_fn` are provided.
       ValueError: If both `lstm_size` and `rnn_construction_fn` are provided.
     """
-
+    print("LSTM SIZE")
+    lstm_size=[40]
+    print("INPUT SPEC")
+    print(input_tensor_spec)
 
     if lstm_size is None and rnn_construction_fn is None:
       raise ValueError('Need to provide either custom rnn_construction_fn or '
@@ -172,18 +175,19 @@ class LSTMEncodingNetwork(network.Network):
     #  if len(lstm_size) == 1:
     if useRIM == False:
         print("NO RIM")
-        cell = tf.keras.layers.LSTMCell(
+        cell = LSTM_cell_test.LSTM_cell_test(
         lstm_size[0],
         dtype=dtype,
         implementation=KERAS_LSTM_FUSED)
     elif useRIM == True:
         print("________________USING RIM_______________")
-        cell =  LSTMCell(
-            lstm_size[0],
-            dtype=dtype,
-            implementation=KERAS_LSTM_FUSED)
-        #cell = RIMCell(units=lstm_size[0], nRIM=6, k=4, num_input_heads=1, input_key_size=32, input_value_size=32, input_query_size=32, input_keep_prob=0.9, num_comm_heads=4, comm_key_size=32, comm_value_size=32, comm_query_size=32, comm_keep_prob=0.9)
-      #else:
+        #cell =  LSTM_cell_test.LSTM_cell_test(
+        #    lstm_size[0],
+        #    dtype=dtype,
+        #    implementation=KERAS_LSTM_FUSED)
+        #print(lstm_size[0])
+        cell = RIMCellPlay.RIMCellPlay(units=lstm_size[0], nRIM=6, k=4, num_input_heads=1, input_key_size=32, input_value_size=32, input_query_size=32, input_keep_prob=0.9, num_comm_heads=4, comm_key_size=32, comm_value_size=32, comm_query_size=32, comm_keep_prob=0.9)
+    #else:
       #  cell = tf.keras.layers.StackedRNNCells(
       #      [tf.keras.layers.LSTMCell(size, dtype=dtype,
       #                                implementation=KERAS_LSTM_FUSED)
